@@ -1,0 +1,204 @@
+{
+  "created": "2026-10-13T14:52:33+00:00",
+  "dataset": {
+    "pairs": "data/coco/pairs.csv",
+    "n_images": 1000,
+    "n_texts": 5002
+  },
+  "models": [
+    {
+      "image_to_text": {
+        "R@1": 0.697,
+        "R@5": 0.895,
+        "R@10": 0.938,
+        "MRR": 0.783592225908438,
+        "median_rank": 1.0
+      },
+      "text_to_image": {
+        "R@1": 0.4962015193922431,
+        "R@5": 0.7844862055177929,
+        "R@10": 0.8804478208716513,
+        "MRR": 0.6251984492473114,
+        "median_rank": 2.0
+      },
+      "model": "clip-b32",
+      "model_name": "openai/clip-vit-base-patch32",
+      "n_images": 1000,
+      "n_texts": 5002,
+      "encode_ms_per_image": 13.0,
+      "encode_ms_per_text": 1.37,
+      "gallery_scaling": [
+        {
+          "n_images": 100,
+          "n_texts": 500,
+          "R@1": 0.91
+        },
+        {
+          "n_images": 250,
+          "n_texts": 1251,
+          "R@1": 0.832
+        },
+        {
+          "n_images": 500,
+          "n_texts": 2502,
+          "R@1": 0.774
+        },
+        {
+          "n_images": 1000,
+          "n_texts": 5002,
+          "R@1": 0.697
+        }
+      ]
+    },
+    {
+      "image_to_text": {
+        "R@1": 0.723,
+        "R@5": 0.919,
+        "R@10": 0.956,
+        "MRR": 0.807417115701391,
+        "median_rank": 1.0
+      },
+      "text_to_image": {
+        "R@1": 0.524390243902439,
+        "R@5": 0.8028788484606157,
+        "R@10": 0.8932427029188325,
+        "MRR": 0.647960057384213,
+        "median_rank": 1.0
+      },
+      "model": "clip-b16",
+      "model_name": "openai/clip-vit-base-patch16",
+      "n_images": 1000,
+      "n_texts": 5002,
+      "encode_ms_per_image": 29.16,
+      "encode_ms_per_text": 1.27,
+      "gallery_scaling": [
+        {
+          "n_images": 100,
+          "n_texts": 500,
+          "R@1": 0.98
+        },
+        {
+          "n_images": 250,
+          "n_texts": 1251,
+          "R@1": 0.872
+        },
+        {
+          "n_images": 500,
+          "n_texts": 2502,
+          "R@1": 0.8
+        },
+        {
+          "n_images": 1000,
+          "n_texts": 5002,
+          "R@1": 0.723
+        }
+      ]
+    },
+    {
+      "image_to_text": {
+        "R@1": 0.634,
+        "R@5": 0.862,
+        "R@10": 0.931,
+        "MRR": 0.7353555069773793,
+        "median_rank": 1.0
+      },
+      "text_to_image": {
+        "R@1": 0.43562574970011997,
+        "R@5": 0.7502998800479808,
+        "R@10": 0.8662534986005598,
+        "MRR": 0.5778015997911036,
+        "median_rank": 2.0
+      },
+      "model": "clip-multilingual",
+      "model_name": "clip-ViT-B-32 + sentence-transformers/clip-ViT-B-32-multilingual-v1",
+      "n_images": 1000,
+      "n_texts": 5002,
+      "encode_ms_per_image": 13.86,
+      "encode_ms_per_text": 1.2,
+      "gallery_scaling": [
+        {
+          "n_images": 100,
+          "n_texts": 500,
+          "R@1": 0.97
+        },
+        {
+          "n_images": 250,
+          "n_texts": 1251,
+          "R@1": 0.824
+        },
+        {
+          "n_images": 500,
+          "n_texts": 2502,
+          "R@1": 0.752
+        },
+        {
+          "n_images": 1000,
+          "n_texts": 5002,
+          "R@1": 0.634
+        }
+      ]
+    }
+  ],
+  "retrieval_vs_generation": {
+    "encoder": "clip-b32",
+    "n_images": 100,
+    "retrieval_open_set": {
+      "image_text_sim": 0.30997681617736816,
+      "ref_sim": 0.8097304290533066
+    },
+    "generation_blip": {
+      "image_text_sim": 0.2945902347564697,
+      "ref_sim": 0.8677044862508774
+    },
+    "examples": [
+      {
+        "image": "000000323496.jpg",
+        "retrieved": "A child holds a racket with a hat on his head.",
+        "generated": "a young boy playing tennis on a tennis court",
+        "reference": "A young lad swings his Wilson tennis racquet."
+      },
+      {
+        "image": "000000479155.jpg",
+        "retrieved": "A young girl speaking on a cell phone near a produce vendor.",
+        "generated": "people shopping at a market",
+        "reference": "Two young kids interacting in the grocery store produce section."
+      },
+      {
+        "image": "000000068078.jpg",
+        "retrieved": "A bathroom with a toilet, window and toilet tissue holder.",
+        "generated": "a bathroom with a toilet, sink, and shower curtain",
+        "reference": "A dog in a small bathroom with an orange shower curtain."
+      },
+      {
+        "image": "000000340451.jpg",
+        "retrieved": "A man on a cell phone in a public area holding his thumb up.",
+        "generated": "a man sitting on a bench",
+        "reference": "Man sitting on park bench waving and wearing water protective clothing."
+      },
+      {
+        "image": "000000378605.jpg",
+        "retrieved": "A small doughnut inside a cup that's sitting on a table.",
+        "generated": "a cup of coffee next to a dont",
+        "reference": "A table with a napkin, doughnut on a plate, and a cup of coffee."
+      },
+      {
+        "image": "000000156071.jpg",
+        "retrieved": "A person riding a horse who is jumping over obstacles.",
+        "generated": "a group of people standing around a metal fence",
+        "reference": "A group of people standing around at a rodeo."
+      },
+      {
+        "image": "000000555050.jpg",
+        "retrieved": "A city street scene of a restaurant with tables outside.",
+        "generated": "a building on the corner of a street",
+        "reference": "A car driving in an intersection, past a furniture shop."
+      },
+      {
+        "image": "000000228144.jpg",
+        "retrieved": "A black and white photo of a bedroom.",
+        "generated": "a mirror on the wall",
+        "reference": "A chair sitting in the middle of the room, in a black and white photo."
+      }
+    ]
+  }
+}

@@ -1,0 +1,7 @@
+.venv/
+storage/
+index/
+data/coco/
+__pycache__/
+.pytest_cache/
+.claude/

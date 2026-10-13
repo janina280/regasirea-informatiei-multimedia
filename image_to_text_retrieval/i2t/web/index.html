@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="ro">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Image-to-Text Retrieval</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Ccircle cx=%2716%27 cy=%2716%27 r=%2713%27 fill=%27%230e7c86%27/%3E%3Cpath d=%27M16 3a13 13 0 0 0 0 26z%27 fill=%27%23fff%27/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <span class="logo" aria-hidden="true">◐</span>
+      <div>
+        <h1>Image-to-Text Retrieval</h1>
+        <p class="sub">Din imagine, la cele mai apropiate texte, cu CLIP</p>
+      </div>
+    </div>
+    <nav class="tabs" role="tablist">
+      <button class="tab active" data-tab="search" role="tab">Căutare</button>
+      <button class="tab" data-tab="collections" role="tab">Colecții</button>
+      <button class="tab" data-tab="eval" role="tab">Evaluare</button>
+      <button class="tab" data-tab="about" role="tab">Despre</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- ======================= CĂUTARE ======================= -->
+    <section id="tab-search" class="panel active">
+      <div class="layout">
+        <aside class="card controls">
+          <div id="drop" class="drop" tabindex="0" role="button" aria-label="Alege o imagine">
+            <img id="preview" alt="Previzualizare" hidden>
+            <div id="drop-hint">
+              <strong>Trage o imagine aici</strong>
+              <span>sau apasă pentru a alege, sau lipește (Ctrl+V)</span>
+            </div>
+            <input id="file" type="file" accept="image/*" hidden>
+          </div>
+
+          <label class="field">Colecție de texte
+            <select id="collection"></select>
+          </label>
+
+          <fieldset class="field">
+            <legend>Model (bifează mai multe pentru comparație)</legend>
+            <div id="models" class="models"></div>
+          </fieldset>
+
+          <label class="field">Număr de rezultate: <b id="topk-val">5</b>
+            <input id="topk" type="range" min="1" max="20" value="5">
+          </label>
+
+          <label class="field">Prag minim de similaritate (opțional)
+            <input id="minscore" type="number" step="0.01" min="-1" max="1" placeholder="ex. 0.25">
+          </label>
+
+          <label class="check">
+            <input id="generative" type="checkbox">
+            Compară cu un titlu generat (BLIP)
+          </label>
+
+          <button id="go" class="primary" disabled>Generează titlu</button>
+          <p id="status" class="status" role="status"></p>
+        </aside>
+
+        <div class="results" id="results">
+          <div class="card empty">
+            <h2>Cum se folosește</h2>
+            <ol>
+              <li>Alege o imagine.</li>
+              <li>Alege colecția de texte candidate și modelul.</li>
+              <li>Apasă „Generează titlu”: imaginea și textele sunt comparate în spațiul CLIP.</li>
+            </ol>
+            <p class="muted">Poți vota rezultatele cu 👍/👎; voturile apar în tab-ul Evaluare.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= COLECȚII ======================= -->
+    <section id="tab-collections" class="panel">
+      <div class="layout cols">
+        <aside class="card">
+          <h2>Colecții</h2>
+          <ul id="col-list" class="col-list"></ul>
+          <form id="col-new" class="inline">
+            <input id="col-name" placeholder="nume-colecție" pattern="[A-Za-z0-9][A-Za-z0-9_-]{0,63}" required>
+            <button class="secondary">Creează</button>
+          </form>
+          <p id="col-msg" class="status" role="status"></p>
+        </aside>
+
+        <div class="card">
+          <div class="row-between">
+            <h2 id="col-title">Selectează o colecție</h2>
+            <button id="col-delete" class="danger" hidden>Șterge colecția</button>
+          </div>
+          <div id="col-body" hidden>
+            <label class="field">Adaugă texte (unul pe rând)
+              <textarea id="col-text" rows="4" placeholder="un câine care aleargă pe plajă&#10;o stradă ploioasă noaptea"></textarea>
+            </label>
+            <div class="inline">
+              <button id="col-add" class="primary">Adaugă</button>
+              <label class="file-btn secondary">Încarcă fișier (.txt / .csv / .jsonl)
+                <input id="col-file" type="file" accept=".txt,.csv,.jsonl,.ndjson" hidden>
+              </label>
+            </div>
+            <input id="col-filter" class="filter" type="search" placeholder="Filtrează textele…">
+            <table class="table" id="col-table"><tbody></tbody></table>
+            <div class="pager"><button id="prev" class="secondary">‹</button><span id="pageinfo"></span><button id="next" class="secondary">›</button></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= EVALUARE ======================= -->
+    <section id="tab-eval" class="panel">
+      <div id="eval-body"><div class="card"><p class="muted">Se încarcă…</p></div></div>
+    </section>
+
+    <!-- ======================= DESPRE ======================= -->
+    <section id="tab-about" class="panel">
+      <div class="card prose">
+        <h2>Cum funcționează</h2>
+        <p>CLIP are două codificatoare, unul pentru imagini și unul pentru text, antrenate astfel încât o imagine și descrierea ei să ajungă la vectori apropiați. Textele candidate sunt codificate o singură dată și păstrate pe disc; la fiecare interogare se codifică doar imaginea.</p>
+        <ol>
+          <li><b>Reprezentare vizuală:</b> imaginea devine un vector normalizat (512 dimensiuni).</li>
+          <li><b>Comparare:</b> similaritatea cosinus față de toți vectorii text (un produs matrice-vector).</li>
+          <li><b>Clasament:</b> primele K texte; primul devine titlul, restul sunt alternative.</li>
+        </ol>
+        <h3>Modele</h3>
+        <p><b>CLIP ViT-B/32</b> și <b>B/16</b> înțeleg text în engleză. <b>CLIP multilingv</b> păstrează codificatorul de imagini B/32 și înlocuiește codificatorul de text cu unul distilat pe peste 50 de limbi, deci poți folosi texte în română.</p>
+        <h3>Limitări</h3>
+        <p>Sistemul <i>alege</i> dintre textele existente, nu inventează text nou; calitatea titlului depinde de acoperirea colecției. Scorurile cosinus ale lui CLIP sunt mici (≈0,2–0,35 pentru potriviri bune), deci contează ordinea. Modelul poate prelua prejudecăți din datele de antrenare.</p>
+        <p class="muted">API interactiv: <a href="/docs" target="_blank">/docs</a></p>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status" hidden></div>
+  <script src="/static/app.js"></script>
+</body>
+</html>

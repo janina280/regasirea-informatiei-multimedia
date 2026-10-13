@@ -1,0 +1,10 @@
+torch>=2.2
+transformers>=4.40
+sentence-transformers>=3.0
+fastapi>=0.110
+uvicorn>=0.29
+python-multipart>=0.0.9
+httpx>=0.27
+pillow>=10.0
+numpy>=1.26
+pytest>=8.0
